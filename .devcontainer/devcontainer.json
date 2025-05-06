@@ -1,0 +1,62 @@
+{
+	"name": "verl-cu124",
+	"image": "whatcanyousee/verl:ngc-cu124-vllm0.8.3-sglang0.4.5-mcore0.12.0-te2.2", // for the full list, refer to https://mcr.microsoft.com/en-us/product/mirror/nvcr/nvidia/pytorch/tags
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"ms-toolsai.jupyter",
+				"ms-toolsai.jupyter-renderers",
+				"ms-toolsai.jupyter-keymap",
+				"yzhang.markdown-all-in-one",
+				"redhat.vscode-yaml",
+				"christian-kohler.path-intellisense",
+				"mhutchie.git-graph",
+				"Gruntfuggly.todo-tree",
+				"timonwong.shellcheck",
+				"emilast.LogFileHighlighter",
+				"njpwerner.autodocstring",
+				"DavidAnson.vscode-markdownlint",
+				"GrapeCity.gc-excelviewer",
+				"aaron-bond.better-comments",
+				"ZainChen.json",
+				"ms-python.black-formatter",
+				"ms-python.isort",
+				"charliermarsh.ruff",
+				"adam-bender.commit-message-editor",
+				"joshbolduc.commitlint",
+				"donjayamanne.githistory",
+				"eamodio.gitlens",
+				"mechatroner.rainbow-csv",
+				"github.vscode-github-actions",
+				"tomoki1207.pdf",
+				"matangover.mypy"
+			]
+		}
+	},
+	"mounts": [
+		"source=/data,target=/data,type=bind,consistency=cached"
+	],
+	"containerEnv": {
+		"AMLT_BLOB_ROOT_DIR": "/data/blob_root",
+		"AMLT_OUTPUT_DIR": "/data/amlt_output",
+		"AMLT_LOGS_DIR": "/data/amlt_log",
+		"AMLT_DATA_DIR": "/data/amlt_data",
+		"AMLT_JOB_NAME": "local",
+		"MASTER_ADDR": "127.0.0.1",
+		"MASTER_PORT": "1234",
+		"NODE_RANK": "0",
+		"NODE_COUNT": "1",
+		"LOCAL_RANK": "0",
+		"AZCOPY_AUTO_LOGIN_TYPE": "AZCLI"
+	},
+	"runArgs": [
+		"--cap-add=SYS_ADMIN",
+		"--device=/dev/fuse",
+		"--security-opt=apparmor:unconfined",
+		"--shm-size=20gb",
+		"--gpus=all",
+		"--privileged"
+	]
+}
