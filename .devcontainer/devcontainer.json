@@ -1,42 +1,33 @@
 {
-	"name": "verl-cu124",
-	"image": "whatcanyousee/verl:ngc-cu124-vllm0.8.3-sglang0.4.5-mcore0.12.0-te2.2", // for the full list, refer to https://mcr.microsoft.com/en-us/product/mirror/nvcr/nvidia/pytorch/tags
+	"name": "cu128-torch2.8-sgl0.5.1-mcore0.15-te2.5-fa-2.7.4-20250826",
+	"image": "leejunjie/sgl-mcore:cu128-torch2.8-sgl0.5.1-mcore0.15-te2.5-fa-2.7.4-20250826",
 	"customizations": {
 		"vscode": {
 			"extensions": [
 				"ms-python.python",
 				"ms-python.vscode-pylance",
 				"ms-toolsai.jupyter",
-				"ms-toolsai.jupyter-renderers",
-				"ms-toolsai.jupyter-keymap",
 				"yzhang.markdown-all-in-one",
 				"redhat.vscode-yaml",
 				"christian-kohler.path-intellisense",
 				"mhutchie.git-graph",
-				"Gruntfuggly.todo-tree",
 				"timonwong.shellcheck",
 				"emilast.LogFileHighlighter",
-				"njpwerner.autodocstring",
 				"DavidAnson.vscode-markdownlint",
-				"GrapeCity.gc-excelviewer",
-				"aaron-bond.better-comments",
 				"ZainChen.json",
-				"ms-python.black-formatter",
-				"ms-python.isort",
 				"charliermarsh.ruff",
-				"adam-bender.commit-message-editor",
-				"joshbolduc.commitlint",
 				"donjayamanne.githistory",
 				"eamodio.gitlens",
 				"mechatroner.rainbow-csv",
-				"github.vscode-github-actions",
 				"tomoki1207.pdf",
-				"matangover.mypy"
+				"matangover.mypy",
+				"tamasfe.even-better-toml",
+				"Leonardo16.nvidia-gpu"
 			]
 		}
 	},
 	"mounts": [
-		"source=/data,target=/data,type=bind,consistency=cached"
+		"source=/Data1/home/junli/data,target=/data,type=bind,consistency=cached"
 	],
 	"containerEnv": {
 		"AMLT_BLOB_ROOT_DIR": "/data/blob_root",
@@ -49,9 +40,12 @@
 		"NODE_RANK": "0",
 		"NODE_COUNT": "1",
 		"LOCAL_RANK": "0",
+		"WORLD_SIZE": "2",
+		"RANK": "0",
 		"AZCOPY_AUTO_LOGIN_TYPE": "AZCLI"
 	},
 	"runArgs": [
+		"--network=host",
 		"--cap-add=SYS_ADMIN",
 		"--device=/dev/fuse",
 		"--security-opt=apparmor:unconfined",

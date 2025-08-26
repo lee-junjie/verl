@@ -1,15 +1,27 @@
 {
+    "python.languageServer": "Pylance",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false,
+    "files.eol": "\n",
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true,
+    "python.defaultInterpreterPath": "/opt/conda/bin/python",
+    "mypy.enabled": true,
+    "mypy.targets": [
+        "./srl",
+    ],
+    "mypy.configFile": "./pyproject.toml",
+    "terminal.integrated.cursorStyle": "underline",
     "[python]": {
-        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": true,
         "editor.codeActionsOnSave": {
-            "source.organizeImports": "always",
-        }
+            "source.organizeImports": "explicit",
+            "source.fixAll": "explicit",
+        },
+        "editor.defaultFormatter": "charliermarsh.ruff"
     },
-    "files.associations": {
-        "array": "cpp",
-        "string_view": "cpp",
-        "initializer_list": "cpp",
-        "utility": "cpp"
-    },
-    "iis.configDir": ""
+    "python-envs.defaultEnvManager": "ms-python.python:conda",
+    "python-envs.defaultPackageManager": "ms-python.python:conda",
+    "python-envs.pythonProjects": [],
 }
