@@ -13,16 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
 import logging
 import os
-from typing import Optional, Tuple
+from typing import Any, Optional
 from uuid import uuid4
 
 from verl.utils.reward_score import gsm8k
+from verl.utils.rollout_trace import rollout_trace_op
 
 from .base_tool import BaseTool
-from .schemas import OpenAIFunctionToolSchema
+from .schemas import OpenAIFunctionToolSchema, ToolResponse
 
 logger = logging.getLogger(__name__)
 logger.setLevel(os.getenv("VERL_LOGGING_LEVEL", "WARN"))
@@ -31,7 +31,7 @@ logger.setLevel(os.getenv("VERL_LOGGING_LEVEL", "WARN"))
 class Gsm8kTool(BaseTool):
     """A demo tool for calculating the reward of gsm8k.
 
-    - `to_openai_function_tool_schema`: return the tool schema in OpenAI format.
+    - `get_openai_tool_schema`: return the tool schema in OpenAI format.
     - `create`: create a tool instance for a trajectory.
     - `execute`: execute the tool.
     - `calc_reward`: calculate the reward respect to tool state.
@@ -64,37 +64,38 @@ class Gsm8kTool(BaseTool):
     def get_openai_tool_schema(self) -> OpenAIFunctionToolSchema:
         return self.tool_schema
 
-    async def create(self, instance_id: Optional[str] = None, ground_truth: Optional[str] = None, **kwargs) -> str:
+    async def create(
+        self, instance_id: Optional[str] = None, ground_truth: Optional[str] = None, **kwargs
+    ) -> tuple[str, ToolResponse]:
         if instance_id is None:
             instance_id = str(uuid4())
+        if ground_truth is None:
+            ground_truth = kwargs.get("create_kwargs", {}).get("ground_truth", None)
         self._instance_dict[instance_id] = {
             "response": "",
             "ground_truth": ground_truth,
             "reward": 0.0,
         }
-        return instance_id
+        return instance_id, ToolResponse()
 
-    async def execute(self, instance_id: str, parameters: str, **kwargs) -> Tuple[str, float, dict]:
-        try:
-            _parameters = json.loads(parameters)
-        except json.JSONDecodeError:
-            _parameters = {}
-        if isinstance(_parameters, dict):
-            answer = _parameters.get("answer", "")
-            if not isinstance(answer, str):
-                answer = str(answer)
-        else:
-            answer = ""
+    @rollout_trace_op
+    async def execute(self, instance_id: str, parameters: dict[str, Any], **kwargs) -> tuple[ToolResponse, float, dict]:
+        answer = parameters.get("answer", "")
+        if not isinstance(answer, str):
+            answer = str(answer)
+
         if answer.startswith("#### "):
             self._instance_dict[instance_id]["response"] = answer
         else:
             self._instance_dict[instance_id]["response"] = "#### " + answer
+
         reward = await self.calc_reward(instance_id)
         # penalty for non improved answer submission
         tool_reward = 0.0 if reward > self._instance_dict[instance_id]["reward"] else -0.05
         # update the reward
         self._instance_dict[instance_id]["reward"] = reward
-        return f"Current parsed {answer=} {reward=}", tool_reward, {}
+
+        return ToolResponse(text=f"Current parsed {answer=} {reward=}"), tool_reward, {}
 
     async def calc_reward(self, instance_id: str, **kwargs) -> float:
         return gsm8k.compute_score(
