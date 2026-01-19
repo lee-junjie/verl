@@ -2,6 +2,8 @@
 
 set -x
 
+pip install -e .
+
 export CUDA_DEVICE_MAX_CONNECTIONS=1 # For megatron communication/computation overlapping
 
 rollout_mode="async"
