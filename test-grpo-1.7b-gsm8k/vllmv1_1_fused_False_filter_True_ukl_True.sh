@@ -8,6 +8,8 @@ rollout_mode="async"
 export VLLM_USE_V1=1
 return_raw_chat="True"
 
+python examples/data_preprocess/gsm8k.py
+python examples/data_preprocess/math_dataset.py
 huggingface-cli download Qwen/Qwen2.5-1.5B-Instruct --local-dir $HOME/models/Qwen2.5-1.5B-Instruct --local-dir-use-symlinks False
 
 gsm8k_train_path=$HOME/data/gsm8k/train.parquet
@@ -18,7 +20,7 @@ math_test_path=$HOME/data/math/test.parquet
 train_files="['$gsm8k_train_path', '$math_train_path']"
 test_files="['$gsm8k_test_path', '$math_test_path']"
 
-USE_FUSED_KERNELS=True
+USE_FUSED_KERNELS=False
 
 python3 -m verl.trainer.main_ppo --config-path=config \
     --config-name='ppo_megatron_trainer.yaml'\
@@ -55,7 +57,7 @@ python3 -m verl.trainer.main_ppo --config-path=config \
     trainer.critic_warmup=0 \
     trainer.logger='["console","wandb"]' \
     trainer.project_name='verl_grpo_example_gsm8k_math' \
-    trainer.experiment_name='default' \
+    trainer.experiment_name='vllmv1_1_fused_False_filter_True_ukl_True' \
     trainer.n_gpus_per_node=4 \
     trainer.nnodes=1 \
     trainer.save_freq=20 \
