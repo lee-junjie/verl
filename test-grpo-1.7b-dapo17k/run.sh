@@ -17,7 +17,7 @@ export VALIDATION_DATA_DIR=${VALIDATION_DATA_DIR:-"${VERL_HOME}/debug/val_jsonl"
 mkdir -p "${VERL_HOME}/data"
 mkdir tmp
 
-export ACTOR_MODEL_PATH=${ACTOR_MODEL_PATH:-"/data/amlt_data/DeepSeek-R1-Distill-Qwen-1.5B/models--deepseek-ai--DeepSeek-R1-Distill-Qwen-1.5B/snapshots/ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562/"}
+export ACTOR_MODEL_PATH=${ACTOR_MODEL_PATH:-"/data/amlt_data/DeepSeek-R1-Distill-Qwen-1.5B/models--deepseek-ai--DeepSeek-R1-Distill-Qwen-1.5B/snapshots/ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562"}
 export PARALLEL_SIZE=2
 export VLLM_USE_V1=0
 
