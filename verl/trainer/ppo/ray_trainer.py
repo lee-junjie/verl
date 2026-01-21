@@ -1635,6 +1635,11 @@ class RayPPOTrainer:
                         actor_output_metrics = reduce_metrics(actor_output.meta_info["metrics"])
                         metrics.update(actor_output_metrics)
 
+                    # Save the batch data to a pickle file
+                    import pickle
+                    with open(f"batch.{self.global_steps}.pkl", "wb") as f:
+                        pickle.dump(batch, f)
+
                     # Log rollout generations if enabled
                     rollout_data_dir = self.config.trainer.get("rollout_data_dir", None)
                     if rollout_data_dir:
