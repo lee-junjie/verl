@@ -19,4 +19,4 @@ if [ ! -f "${TEST_FILE}" ] || [ "${OVERWRITE}" -eq 1 ]; then
   wget -O "${TEST_FILE}" "https://huggingface.co/datasets/BytedTsinghua-SIA/AIME-2024/resolve/main/data/aime-2024.parquet?download=true"
 fi
 
-python repro-just-rl/download-model.py
+python test-grpo-1.7b-dapo17k/download-model.py

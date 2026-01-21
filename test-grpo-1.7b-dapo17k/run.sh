@@ -17,8 +17,7 @@ export VALIDATION_DATA_DIR=${VALIDATION_DATA_DIR:-"${VERL_HOME}/debug/val_jsonl"
 mkdir -p "${VERL_HOME}/data"
 mkdir tmp
 
-export ACTOR_MODEL_PATH=${ACTOR_MODEL_PATH:-"/data/amlt_data/models/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B/models--deepseek-ai--Deep
-Seek-R1-Distill-Qwen-1.5B/snapshots/ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562/"}
+export ACTOR_MODEL_PATH=${ACTOR_MODEL_PATH:-"/data/amlt_data/DeepSeek-R1-Distill-Qwen-1.5B/models--deepseek-ai--DeepSeek-R1-Distill-Qwen-1.5B/snapshots/ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562/"}
 export PARALLEL_SIZE=2
 export VLLM_USE_V1=0
 
@@ -63,6 +62,7 @@ python3 -u -m verl.trainer.main_ppo \
     actor_rollout_ref.rollout.val_kwargs.temperature=0.7 \
     actor_rollout_ref.rollout.val_kwargs.top_p=0.9 \
     actor_rollout_ref.rollout.gpu_memory_utilization=0.6 \
+    actor_rollout_ref.rollout.calculate_log_probs=True \
     actor_rollout_ref.ref.fsdp_config.param_offload=True \
     reward_model.enable=False \
     reward_model.reward_manager=dapo \
