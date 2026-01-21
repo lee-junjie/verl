@@ -8,11 +8,6 @@ export TRAIN_FILE=${TRAIN_FILE:-"${VERL_HOME}/data/dapo-math-17k-processed.parqu
 export TEST_FILE=${TEST_FILE:-"${VERL_HOME}/data/aime-2024-processed.parquet"}
 export OVERWRITE=${OVERWRITE:-0}
 
-# Optional debug dumps (JSONL per training step).
-# - rollout dump: prompt/response/score (+ any reward extra infos)
-# - validation dump: prompt/response/score (+ any reward extra infos)
-export ROLLOUT_DATA_DIR=${ROLLOUT_DATA_DIR:-"${VERL_HOME}/debug/rollout_jsonl"}
-export VALIDATION_DATA_DIR=${VALIDATION_DATA_DIR:-"${VERL_HOME}/debug/val_jsonl"}
 
 mkdir -p "${VERL_HOME}/data"
 mkdir tmp
@@ -72,8 +67,6 @@ python3 -u -m verl.trainer.main_ppo \
     trainer.experiment_name=Default \
     trainer.n_gpus_per_node=4 \
     trainer.nnodes=1 \
-    trainer.rollout_data_dir="$ROLLOUT_DATA_DIR" \
-    trainer.validation_data_dir="$VALIDATION_DATA_DIR" \
     trainer.save_freq=20 \
     trainer.test_freq=20 \
     trainer.total_epochs=1 \
