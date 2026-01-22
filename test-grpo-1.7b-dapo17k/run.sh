@@ -62,6 +62,7 @@ python3 -u -m verl.trainer.main_ppo \
     reward_model.enable=False \
     reward_model.reward_manager=dapo \
     trainer.val_before_train=False \
+    trainer.resume_mode=disable \
     trainer.logger=['console','tensorboard'] \
     trainer.project_name=GrpoDAPO17k \
     trainer.experiment_name=Default \
