@@ -17,7 +17,7 @@
 PPO Trainer with Ray-based single controller.
 This trainer supports model-agonistic model initialization with huggingface
 """
-
+from pathlib import Path
 import json
 import os
 import uuid
@@ -1634,6 +1634,14 @@ class RayPPOTrainer:
                             actor_output = self._update_actor(batch)
                         actor_output_metrics = reduce_metrics(actor_output.meta_info["metrics"])
                         metrics.update(actor_output_metrics)
+
+                    # DEBUG only: Save the batch data to a pickle file
+                    import pickle
+                    batch_dir = Path("/data/amlt_data/batches")
+                    batch_dir.mkdir(parents=True, exist_ok=True)
+                    batch_file = batch_dir / f"batch.{self.global_steps}.pkl"
+                    with open(str(batch_file), "wb") as f:
+                        pickle.dump(batch.batch, f)
 
                     # Log rollout generations if enabled
                     rollout_data_dir = self.config.trainer.get("rollout_data_dir", None)
