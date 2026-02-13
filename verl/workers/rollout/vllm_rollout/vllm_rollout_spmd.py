@@ -40,7 +40,11 @@ from tensordict import TensorDict
 from vllm import LLM, SamplingParams
 from vllm.distributed import parallel_state as vllm_ps
 from vllm.lora.request import LoRARequest
-from vllm.worker.worker_base import WorkerWrapperBase
+
+try:
+    from vllm.worker.worker_base import WorkerWrapperBase
+except ModuleNotFoundError:
+    from vllm.v1.worker.worker_base import WorkerWrapperBase
 
 from verl import DataProto
 from verl.third_party.vllm import vllm_version
@@ -157,7 +161,7 @@ class vLLMRollout(BaseRollout):
             enforce_eager=config.enforce_eager,
             gpu_memory_utilization=config.gpu_memory_utilization,
             disable_custom_all_reduce=True,
-            disable_mm_preprocessor_cache=True,
+            # disable_mm_preprocessor_cache=True,
             limit_mm_per_prompt=limit_mm_per_prompt,
             skip_tokenizer_init=False,
             max_model_len=max_model_len,
