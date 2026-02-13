@@ -617,7 +617,7 @@ class RayPPOTrainer:
             if len(v) == n:
                 base_data[k] = v
 
-        with open(filename, "w") as f:
+        with open(filename, "w", encoding="utf-8") as f:
             for i in range(n):
                 entry = {k: v[i] for k, v in base_data.items()}
                 f.write(json.dumps(entry, ensure_ascii=False) + "\n")
