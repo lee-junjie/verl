@@ -32,6 +32,7 @@ class DAPORewardManager:
         max_resp_len=None,
         overlong_buffer_cfg=None,
     ) -> None:
+        print(f"DAPORewardManager init with overlong_buffer_cfg: {overlong_buffer_cfg}")
         self.tokenizer = tokenizer
         self.num_examine = num_examine  # the number of batches of decoded responses to print to the console
         self.compute_score = compute_score or default_compute_score
@@ -39,7 +40,7 @@ class DAPORewardManager:
         self.overlong_buffer_cfg = overlong_buffer_cfg
         self.max_resp_len = max_resp_len
 
-        if self.overlong_buffer_cfg is not None:
+        if self.overlong_buffer_cfg and self.overlong_buffer_cfg.enable:
             assert self.max_resp_len is not None, f"max_resp_len must be provided if {overlong_buffer_cfg=}, but got None"
 
     def __call__(self, data: DataProto, return_dict: bool = False):

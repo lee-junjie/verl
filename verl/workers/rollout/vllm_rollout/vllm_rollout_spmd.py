@@ -123,7 +123,8 @@ class vLLMRollout(BaseRollout):
 
             assert max_position_embeddings >= config.prompt_length + config.response_length, "model context length should be greater than total sequence length"
 
-        max_model_len = int(config.max_model_len or config.prompt_length + config.response_length)
+        max_model_len = 16384
+        # max_model_len = int(config.max_model_len or config.prompt_length + config.response_length)
 
         if max_num_batched_tokens < max_model_len and self.config.enable_chunked_prefill:
             raise ValueError(
@@ -273,8 +274,10 @@ class vLLMRollout(BaseRollout):
                 "top_k": self.config.val_kwargs.top_k,
                 "top_p": self.config.val_kwargs.top_p,
                 "temperature": self.config.val_kwargs.temperature,
+                "max_tokens": self.config.val_kwargs.get("max_new_tokens", self.config.response_length),
                 "n": 1,  # if validate, already repeat in ray_trainer
             }
+            print(f"validation kwargs: {kwargs}")
 
         lora_requests = None
         if self.lora_kwargs:
@@ -306,8 +309,13 @@ class vLLMRollout(BaseRollout):
                         curr_log_prob.append(logprob[response_ids[i]].logprob)
                     rollout_log_probs.append(curr_log_prob)
 
-            response = pad_2d_list_to_length(response, self.pad_token_id, max_length=self.config.response_length).to(idx.device)
-            rollout_log_probs = pad_2d_list_to_length(rollout_log_probs, -1, max_length=self.config.response_length).to(idx.device)
+            # During validation, use the actual max_tokens for padding to ensure consistent sizes across workers
+            if is_validate:
+                padding_length = self.config.val_kwargs.get("max_new_tokens", self.config.response_length)
+            else:
+                padding_length = self.config.response_length
+            response = pad_2d_list_to_length(response, self.pad_token_id, max_length=padding_length).to(idx.device)
+            rollout_log_probs = pad_2d_list_to_length(rollout_log_probs, -1, max_length=padding_length).to(idx.device)
             rollout_log_probs = rollout_log_probs.to(torch.float32)
 
             if self.sampling_params.n > 1 and do_sample:

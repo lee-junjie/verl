@@ -17,15 +17,16 @@
 FSDP PPO Trainer with Ray-based single controller.
 This trainer supports model-agonistic model initialization with huggingface
 """
-
 import json
 import os
+import pickle
 import uuid
 from collections import defaultdict
 from contextlib import contextmanager
 from copy import deepcopy
 from dataclasses import dataclass, field
 from enum import Enum
+from pathlib import Path
 from pprint import pprint
 from typing import Dict, Optional, Type
 
@@ -617,7 +618,7 @@ class RayPPOTrainer:
             if len(v) == n:
                 base_data[k] = v
 
-        with open(filename, "w") as f:
+        with open(filename, "w", encoding="utf-8") as f:
             for i in range(n):
                 entry = {k: v[i] for k, v in base_data.items()}
                 f.write(json.dumps(entry, ensure_ascii=False) + "\n")
@@ -1159,6 +1160,13 @@ class RayPPOTrainer:
                             actor_output = self.actor_rollout_wg.update_actor(batch)
                         actor_output_metrics = reduce_metrics(actor_output.meta_info["metrics"])
                         metrics.update(actor_output_metrics)
+
+                    # DEBUG only: Save the batch data to a pickle file
+                    batch_dir = Path("/data/amlt_data/batches")
+                    batch_dir.mkdir(parents=True, exist_ok=True)
+                    batch_file = batch_dir / f"batch.{self.global_steps}.pkl"
+                    with open(str(batch_file), "wb") as f:
+                        pickle.dump(batch.batch, f)
 
                     # Log rollout generations if enabled
                     rollout_data_dir = self.config.trainer.get("rollout_data_dir", None)
