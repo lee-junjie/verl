@@ -123,7 +123,7 @@ class vLLMRollout(BaseRollout):
 
             assert max_position_embeddings >= config.prompt_length + config.response_length, "model context length should be greater than total sequence length"
 
-        max_model_len = 32768
+        max_model_len = 16384
         # max_model_len = int(config.max_model_len or config.prompt_length + config.response_length)
 
         if max_num_batched_tokens < max_model_len and self.config.enable_chunked_prefill:
