@@ -107,7 +107,6 @@ class RLHFDataset(Dataset):
         self.return_full_prompt = config.get("return_full_prompt", False)
         self.truncation = config.get("truncation", "error")
         self.filter_overlong_prompts = config.get("filter_overlong_prompts", True)
-        self.use_boxed_suffix_prompt = config.get("use_boxed_suffix_prompt", False)
 
         self.num_workers = config.get("filter_overlong_prompts_workers", max(1, os.cpu_count() // 4))
         self.num_workers = min(self.num_workers, os.cpu_count())
@@ -135,19 +134,6 @@ class RLHFDataset(Dataset):
         self.dataframe: datasets.Dataset = datasets.concatenate_datasets(dataframes)
 
         print(f"dataset len: {len(self.dataframe)}")
-        
-        # append a system prompt to every prompt, where the prompt is a list of messages, reserving the other fields except prompt_key
-        if self.use_boxed_suffix_prompt:
-            suffix_prompt = "\n\nPlease reason step by step, and put your final answer within \\boxed{}."
-            self.dataframe = self.dataframe.map(
-                lambda doc: {
-                    self.prompt_key: [{"role": "user", "content": doc[self.prompt_key][0]['content'] + suffix_prompt}],
-                    **{k: v for k, v in doc.items() if k != self.prompt_key}
-                },
-                num_proc=self.num_workers,
-                desc="Adding suffix prompt to each prompt",
-                keep_in_memory=True,
-            )
 
         # filter out too long prompts
         if self.filter_overlong_prompts:

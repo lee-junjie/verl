@@ -8,8 +8,8 @@ export PROJECT_PATH=/root/verl
 tag=$(date +%Y-%m-%d_%H-%M-%S)
 export EXPERIMENT_NAME=JustRL-DeepSeek-1.5B-$tag
 
-export TRAIN_DATASET=/root/verl/data/dapo-math-17k.parquet
-export TEST_AIME24=/root/verl/data/aime-2024.parquet
+export TRAIN_DATASET=/root/verl/data/dapo-math-17k-processed.parquet
+export TEST_AIME24=/root/verl/data/aime-2024-processed.parquet
 
 # export TEST_DATASET="['$TEST_AIME24']"
 export TEST_DATASET="['$TEST_AIME24']"

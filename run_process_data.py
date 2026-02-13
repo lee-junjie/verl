@@ -24,7 +24,7 @@ def apply_simple_prompt(prompt) -> list[dict[str, str]]:
     )
     end = '\n\nRemember to put your answer on its own line after "Answer:".'
     assert start in content and end in content, f"Unexpected prompt format {content}."
-    content = content.replace(start, "").replace(end, "")
+    # content = content.replace(start, "").replace(end, "")
     content = f"{content.strip()}" + r" Please reason step by step, and put your final answer within \boxed{}."
     prompt[0]["content"] = content
     return prompt
