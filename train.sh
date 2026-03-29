@@ -4,16 +4,16 @@ set -x
 
 export PYTHONUNBUFFERED=1
 export PROJECT_NAME=justrl
-export PROJECT_PATH=/mnt/3fs/data/junjie.li/rl-parity-test/JustRL/train
-export SHARED_DATA_ROOT=/mnt/3fs/data/junjie.li/test-data-dir/BytedTsinghua-SIA
+export PROJECT_PATH=/mnt/3fs2/data/junjie.li/rl-parity-test/JustRL/train
+export SHARED_DATA_ROOT=/mnt/3fs2/data/shared_data/BytedTsinghua-SIA
 export TRAIN_DATASET=$SHARED_DATA_ROOT/DAPO-Math-17k/data/dapo-math-17k.parquet
 export TEST_AIME24=$SHARED_DATA_ROOT/AIME-2024/data/aime-2024.parquet
 export TEST_DATASET="['$TEST_AIME24']"
-export ACTOR_MODEL_PATH=/mnt/3fs/data/junjie.li/test-model-dir/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
+export ACTOR_MODEL_PATH=/mnt/3fs2/data/shared_init_models/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
 export EXPERIMENT_NAME=${EXPERIMENT_NAME:-justrl_$(date +%Y%m%d_%H%M%S)_$$}
 export PARALLEL_SIZE=1
-export CKPT_PATH=/mnt/3fs/data/junjie.li/rl-parity-test/JustRL/train/checkpoints
-export TMP_DIR=/mnt/3fs/data/junjie.li/rl-parity-test/JustRL/train/tmp
+export CKPT_PATH=/mnt/3fs2/data/junjie.li/rl-parity-test/JustRL/train/checkpoints
+export TMP_DIR=/mnt/3fs2/data/junjie.li/rl-parity-test/JustRL/train/tmp
 export OUTLINES_CACHE_DIR="${OUTLINES_CACHE_DIR:-$TMP_DIR/outlines-$EXPERIMENT_NAME}"
 mkdir -p "$TMP_DIR" "$CKPT_PATH" "$OUTLINES_CACHE_DIR"
 
