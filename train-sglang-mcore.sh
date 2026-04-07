@@ -32,7 +32,7 @@ mkdir -p "$TENSORBOARD_DIR"
 
 cd "$PROJECT_PATH"
 
-python -m verl.trainer.main_ppo --config-path=verl/trainer/config \
+python -m verl.trainer.main_ppo --config-path=config \
     --config-name='ppo_megatron_trainer.yaml' \
     algorithm.adv_estimator=grpo \
     algorithm.use_kl_in_reward=False \
@@ -46,7 +46,7 @@ python -m verl.trainer.main_ppo --config-path=verl/trainer/config \
     data.max_response_length=15360 \
     data.filter_overlong_prompts=True \
     data.truncation='error' \
-    data.custom_cls.path=examples/grpo_trainer/justrl_dataset.py \
+    data.custom_cls.path=$PROJECT_PATH/examples/grpo_trainer/justrl_dataset.py \
     data.custom_cls.name=JustRLRLDataset \
     actor_rollout_ref.model.path=$ACTOR_MODEL_PATH \
     actor_rollout_ref.actor.optim.lr=1e-6 \
@@ -101,5 +101,4 @@ python -m verl.trainer.main_ppo --config-path=verl/trainer/config \
     trainer.save_freq=50 \
     trainer.test_freq=50 \
     trainer.total_epochs=1 \
-    trainer.default_local_dir="$CKPT_PATH/$PROJECT_NAME/$EXPERIMENT_NAME" \
-    trainer.validation_data_dir="$CKPT_PATH/$PROJECT_NAME/$EXPERIMENT_NAME/validation"
+    trainer.default_local_dir="$CKPT_PATH/$PROJECT_NAME/$EXPERIMENT_NAME"
