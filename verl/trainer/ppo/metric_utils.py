@@ -17,6 +17,7 @@ Metrics related to the PPO trainer.
 
 from collections import defaultdict
 from functools import partial
+from numbers import Real
 from typing import Any, Callable
 
 import numpy as np
@@ -25,6 +26,10 @@ import torch
 import verl.utils.torch_functional as verl_F
 from verl import DataProto
 from verl.utils.import_utils import deprecated
+
+
+def _is_numeric_metric_value(value: Any) -> bool:
+    return isinstance(value, (Real, np.bool_, np.integer, np.floating))
 
 
 @deprecated("verl.utils.metric.reduce_metrics")
@@ -508,6 +513,15 @@ def calc_maj_val(data: list[dict[str, Any]], vote_key: str, val_key: str) -> flo
     return maj_val
 
 
+def _is_numeric_metric_value(value: Any) -> bool:
+    """Return whether a validation payload value is a scalar we can aggregate numerically."""
+    if value is None or isinstance(value, (str, bytes, np.str_, np.bytes_)):
+        return False
+    if isinstance(value, (bool, np.bool_)):
+        return True
+    return isinstance(value, Real)
+
+
 def process_validation_metrics(
     data_sources: list[str], sample_uids: list[str], infos_dict: dict[str, list[Any]], seed: int = 42
 ) -> dict[str, dict[str, dict[str, float]]]:
@@ -593,8 +607,14 @@ def process_validation_metrics(
             var_dict = uid_dict.setdefault(uid, {})
 
             for var_name, var_vals in var2vals.items():
-                # skip empty or string values
-                if not var_vals or isinstance(var_vals[0], str):
+                # Validation payloads can include textual metadata such as predictions,
+                # plus mixed None/string values when verification fails to parse a boxed answer.
+                # Only aggregate fields that are fully numeric.
+                if not var_vals:
+                    continue
+                if any(value is None or isinstance(value, (str, bytes, np.str_, np.bytes_)) for value in var_vals):
+                    continue
+                if not all(_is_numeric_metric_value(value) for value in var_vals):
                     continue
 
                 # compute mean and std
