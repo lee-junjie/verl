@@ -45,6 +45,7 @@ python -m verl.trainer.main_ppo --config-path=config \
     data.max_prompt_length=1024 \
     data.max_response_length=15360 \
     data.filter_overlong_prompts=True \
+    data.filter_overlong_prompts_workers=64 \
     data.truncation='error' \
     data.custom_cls.path=$PROJECT_PATH/examples/grpo_trainer/justrl_dataset.py \
     data.custom_cls.name=JustRLRLDataset \
