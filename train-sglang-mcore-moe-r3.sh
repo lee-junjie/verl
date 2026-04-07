@@ -7,10 +7,11 @@ export CUDA_DEVICE_MAX_CONNECTIONS=1
 export PROJECT_NAME=${PROJECT_NAME:-verl_justrl_moe_r3}
 export PROJECT_PATH=/mnt/3fs2/data/junjie.li/rl-parity-test/verl
 export SHARED_DATA_ROOT=/mnt/3fs2/data/shared_data/BytedTsinghua-SIA
+export SHARED_MODEL_ROOT=/mnt/3fs2/data/shared_init_models/Qwen
 export TRAIN_DATASET=${TRAIN_DATASET:-$SHARED_DATA_ROOT/DAPO-Math-17k/data/dapo-math-17k.parquet}
 export TEST_AIME24=${TEST_AIME24:-$SHARED_DATA_ROOT/AIME-2024/data/aime-2024.parquet}
 export TEST_DATASET=${TEST_DATASET:-"['$TEST_AIME24']"}
-export ACTOR_MODEL_PATH=${ACTOR_MODEL_PATH:-Qwen/Qwen3-30B-A3B-Base}
+export ACTOR_MODEL_PATH=${ACTOR_MODEL_PATH:-$SHARED_MODEL_ROOT/Qwen3-30B-A3B-Base}
 export EXPERIMENT_NAME=${EXPERIMENT_NAME:-${PROJECT_NAME}_$(date +%Y%m%d_%H%M%S)_$$}
 export VAL_ROLLOUT_N=${VAL_ROLLOUT_N:-8}
 export TRAIN_TP=${TRAIN_TP:-8}
@@ -32,6 +33,8 @@ exec > >(tee -a "$RUN_LOG") 2>&1
 
 export NCCL_DEBUG=WARN
 export TOKENIZERS_PARALLELISM=true
+export HF_HUB_OFFLINE=${HF_HUB_OFFLINE:-1}
+export TRANSFORMERS_OFFLINE=${TRANSFORMERS_OFFLINE:-1}
 export TENSORBOARD_DIR=$TMP_DIR/logs/$PROJECT_NAME/$EXPERIMENT_NAME
 export HYDRA_FULL_ERROR=1
 export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-0,1,2,3,4,5,6,7}
