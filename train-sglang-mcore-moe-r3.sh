@@ -82,7 +82,6 @@ python -m verl.trainer.main_ppo --config-path=config \
     actor_rollout_ref.actor.megatron.tensor_model_parallel_size=$TRAIN_TP \
     actor_rollout_ref.actor.megatron.expert_model_parallel_size=$TRAIN_EP \
     actor_rollout_ref.actor.megatron.expert_tensor_parallel_size=$TRAIN_ETP \
-    actor_rollout_ref.actor.megatron.router_replay.mode=$ROUTING_REPLAY_MODE \
     actor_rollout_ref.actor.megatron.param_offload=False \
     actor_rollout_ref.actor.megatron.grad_offload=False \
     actor_rollout_ref.actor.megatron.optimizer_offload=False \
