@@ -95,6 +95,7 @@ python -m verl.trainer.main_ppo --config-path=config \
     actor_rollout_ref.rollout.skip_tokenizer_init=True \
     actor_rollout_ref.rollout.temperature=1.0 \
     actor_rollout_ref.rollout.n=8 \
+    actor_rollout_ref.rollout.calculate_log_probs=True \
     actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=1 \
     actor_rollout_ref.rollout.val_kwargs.do_sample=True \
     +actor_rollout_ref.rollout.val_kwargs.max_new_tokens=31744 \
